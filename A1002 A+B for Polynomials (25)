@@ -1,0 +1,112 @@
+#include<iostream>
+#include<vector>
+#include<cmath>
+#include<stdio.h>
+using namespace std;
+struct Term
+{
+	int index;
+	double coe;
+};
+
+int main()
+{
+	int k1;
+	cin>>k1;
+	vector<Term>nums1;	
+	for(int i=0;i<k1;i++)
+	{
+		Term temp;
+		cin>>temp.index>>temp.coe;
+		nums1.push_back(temp);		
+	}
+	
+	int k2;
+	cin>>k2;
+	vector<Term>nums2;
+	for(int i=0;i<k2;i++)
+	{
+		Term temp;
+		cin>>temp.index>>temp.coe;
+		nums2.push_back(temp);
+	}
+
+
+	
+	vector<Term> result;
+	int i=0,j=0;
+	for(;(i<k1)&&(j<k2);)
+	{
+		Term temp;
+		if(nums1.at(i).index<nums2.at(j).index)
+		{
+			temp.index=nums2.at(j).index;
+			temp.coe=nums2.at(j).coe;
+			result.push_back(temp);
+			j++;
+		}
+		else if(nums1.at(i).index>nums2.at(j).index)
+		{
+			temp.index=nums1.at(i).index;
+			temp.coe=nums1.at(i).coe;
+			result.push_back(temp);
+			i++;
+		}
+		else
+		{
+			temp.index=nums1.at(i).index;
+			temp.coe=nums1.at(i).coe+nums2.at(j).coe;
+			i++;
+			j++;
+			if(abs(temp.coe)<1e-7)
+			{
+				continue;
+			}
+			else
+			{
+				result.push_back(temp);				
+			}
+		}		
+	}
+	
+	
+	//溢出的后处理 ,将多余的没有连接到的接在后面 
+	if( (i==k1) && (j<k2) )
+	{//j有剩余 
+		for(int k=j;k<k2;k++)
+		{
+			result.push_back(nums2.at(k));
+		}
+	}
+	else if((i<k1) && (j==k2))
+	{//i有剩余 
+		for(int k=i;k<k1;k++)
+		{
+			Term remain;
+			result.push_back(nums1.at(k));
+		}
+	}
+	
+	//output
+	cout<<result.size();
+	if(result.size())
+	{
+		cout<<" ";
+	}
+	
+	for(int i=0;i<result.size();i++)
+	{
+		cout<<result.at(i).index<<" ";
+		//cout<<result.at(i).coe;
+		printf("%.1f",result.at(i).coe);
+		if(i<result.size()-1)
+		{
+			cout<<" ";
+		}
+		else
+		{
+			cout<<endl;
+		}
+	}	
+	return 0;
+}
