@@ -1,0 +1,152 @@
+#include<iostream>
+#include<vector>
+#include<cmath>
+#include<stdio.h>
+using namespace std;
+struct Term
+{
+	int index;
+	double coe;
+};
+
+void times(Term multip,vector<Term> poly,vector<Term>&product)
+{//一项乘多项式，乘法
+	product.clear();
+	for(int i=0;i<poly.size();i++)
+	{
+		Term temp;
+		temp.coe=multip.coe*poly.at(i).coe;
+		temp.index=multip.index+poly.at(i).index;
+		//product.push_back(temp);
+		
+		if(abs(temp.coe)>1e-7)
+		{
+			product.push_back(temp);
+		}
+		
+	}
+}
+
+
+void add(vector<Term> poly1,vector<Term> poly2,vector<Term> &sum)
+{//两个幂指数递减，加法
+	
+	sum.clear();
+
+	int i=0,j=0;
+	Term temp;
+	for(;i<poly1.size() && j<poly2.size();)
+	{
+		if(poly1.at(i).index>poly2.at(j).index)
+		{
+			sum.push_back(poly1.at(i));			
+			i++;
+		}
+		else if(poly1.at(i).index<poly2.at(j).index)
+		{
+			sum.push_back(poly2.at(j));				
+			j++;
+		}
+		else if(poly1.at(i).index == poly2.at(j).index)
+		{
+			temp.index=poly1.at(i).index;
+			temp.coe=poly1.at(i).coe+poly2.at(j).coe;
+			sum.push_back(temp);
+			i++;
+			j++;
+		}
+	}
+	
+	int k=0;
+	if(i>=poly1.size() && j<poly2.size())
+	{//poly2 remaining
+		for(k=j;k<poly2.size();k++)
+		{
+			sum.push_back(poly2.at(k));
+		}
+	}
+	else if( i<poly1.size() && j>=poly2.size() )
+	{//nums1 remaining
+		for(k=i;k<poly1.size();k++)
+		{
+			sum.push_back(poly1.at(k));
+		}
+	}
+	
+}
+
+void print(vector<Term>vec)
+{
+	vector<Term>newvec;
+	for(int i=0;i<vec.size();i++)
+	{
+		if(abs(vec.at(i).coe)>1e-7)
+		{
+			newvec.push_back(vec.at(i));
+		}
+	}
+
+
+	cout<<newvec.size();
+	if(newvec.size())
+	{
+		cout<<" ";
+	}
+	for(int i=0;i<newvec.size();i++)
+	{
+		cout<<newvec.at(i).index<<" ";
+		printf("%.1f",newvec.at(i).coe);
+		if(i<newvec.size()-1)
+		{
+			cout<<" ";
+		}
+		else 
+		{
+			cout<<endl;
+		}
+	}
+
+
+}
+
+int main()
+{
+	int k1;
+	cin>>k1;
+	vector<Term>nums1;	
+	for(int i=0;i<k1;i++)
+	{
+		Term temp;
+		cin>>temp.index>>temp.coe;
+		nums1.push_back(temp);		
+	}
+	
+	int k2;
+	cin>>k2;
+	vector<Term>nums2;
+	for(int i=0;i<k2;i++)
+	{
+		Term temp;
+		cin>>temp.index>>temp.coe;
+		nums2.push_back(temp);
+	}
+	
+	vector<Term>sum;
+	vector<Term>subprod;
+	for(int i=0;i<k1;i++)
+	{
+		times(nums1.at(i),nums2,subprod);
+		if(i==0)
+		{
+			sum=subprod;
+		}
+		else
+		{
+			add(sum,subprod,sum);
+		}
+	}
+	
+	print(sum);
+		
+	return 0;
+}
